@@ -41,7 +41,7 @@ async def aflow_inference(
     question: str,
     entry_point: Optional[str] = None,
     round: Optional[int] = None,
-    llm_name: str = "gpt-4o-mini",
+    llm_name: str = "lenovo-local",
     optimized_path: str = "metagpt/ext/aflow/scripts/optimized",
 ) -> Tuple[str, float]:
     """AFLOW推理接口

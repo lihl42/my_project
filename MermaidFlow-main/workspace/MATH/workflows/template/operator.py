@@ -12,8 +12,6 @@ from scripts.async_llm import AsyncLLM
 from scripts.logs import logger
 import asyncio
 
-import weave
-
 
 class Operator:
     def __init__(self, llm: AsyncLLM, name: str):
@@ -60,7 +58,7 @@ class Operator:
 class RoleExpansionLLM(Operator):
     def __init__(self, llm: AsyncLLM, name: str = "role_expansion"):
         super().__init__(llm, name)
-    @weave.op()
+    
     async def __call__(self, input):
         prompt = f"""Analyze and enhance the original instruction to create a more effective and specific version for given input.
 
@@ -96,7 +94,7 @@ models_config = LLMsConfig.default()
 
 global _role_expansion_llm
 
-role_expansion_llm_config = models_config.get("gpt-4o-mini")
+role_expansion_llm_config = models_config.get("lenovo-local")
 role_expansion_llm_config.temperature = 0.7
 
 _role_expansion_llm = RoleExpansionLLM(llm=AsyncLLM(role_expansion_llm_config))
@@ -145,11 +143,9 @@ class Custom(Operator):
         super().__init__(llm, name)
 
     # @question_specific_custom
-    @weave.op()
     async def __call__(self, input, instruction, role: str="Solver"):
         prompt = instruction + input
-        with weave.attributes({"custom_role": role}):
-            response = await self._fill_node(GenerateOp, prompt, mode="single_fill")
+        response = await self._fill_node(GenerateOp, prompt, mode="single_fill")
         return response
 
 def run_code(code):
@@ -219,7 +215,6 @@ class Programmer(Operator):
         return response
 
     @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
-    @weave.op()
     async def __call__(self, problem: str, analysis: str = "None"):
         """
         Call method, generate code and execute, retry up to 3 times.
@@ -254,7 +249,7 @@ class ScEnsemble(Operator):
 
     def __init__(self, llm: AsyncLLM, name: str = "ScEnsemble"):
         super().__init__(llm, name)
-    @weave.op()
+    
     async def __call__(self, solutions: List[str], problem: str):
         answer_mapping = {}
         solution_text = ""

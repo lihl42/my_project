@@ -28,7 +28,6 @@ from MermaidFlow_Linter import MermaidCheker, ConfigCls
 from pathlib import Path
 
 
-import weave
 from scripts.extract_dataset import (
     HardProblem,
     transfer_format,
@@ -59,7 +58,6 @@ checker_config = Path("MermaidFlow_Linter/config/checker_config.json")
 # checker_config= Path("MermaidFlow_Linter/config/checker_config_code.json") # for code
 
 
-@weave.op()
 async def get_next_workflow(
     elites,
     elites_all,
@@ -160,7 +158,6 @@ class Optimizer:
         for opt_round in range(self.max_rounds):
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            view = weave.SavedView()
 
             retry_count = 0
             max_retries = 1
@@ -208,8 +205,6 @@ class Optimizer:
         validation_n = self.validation_rounds  # validation datasets's execution number
         graph_path = f"{self.root_path}/workflows"
         data = self.data_utils.load_results(graph_path)
-        view = weave.SavedView()
-        view = view.filter_op("Evaluator.graph_evaluate").sort_by("started_at", "desc")
 
         # Create a loop until the generated graph meets the check conditions
         while True:

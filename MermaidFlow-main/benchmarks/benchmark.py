@@ -14,7 +14,6 @@ from scripts.logs import logger
 from scripts.utils.common import write_json_file
 import tqdm
 
-import weave
 
 class BaseBenchmark(ABC):
     def __init__(self, name: str, file_path: str, log_path: str):
@@ -95,7 +94,6 @@ class BaseBenchmark(ABC):
             return {"input_text": output[0], "output": output[1], "expected_output": output[2], "uni_score": True if output[3] == 1 else False, "cost": output[4]}
         
         with tqdm.tqdm(total=total, desc=f"Evaluating {self.name} problems") as pbar:
-            @weave.op(postprocess_output=postprocess_output)
             async def sem_evaluate(problem):
                 nonlocal correct
                 async with semaphore:

@@ -13,7 +13,6 @@ from benchmarks.humaneval import HumanEvalBenchmark
 from benchmarks.math import MATHBenchmark
 from benchmarks.mbpp import MBPPBenchmark
 from benchmarks.aime import AIMEBenchmark
-import weave
 
 # If you want to customize tasks, add task types here and provide evaluation functions, just like the ones given above
 DatasetType = Literal["HumanEval", "MBPP", "GSM8K", "MATH", "HotpotQA", "DROP"]
@@ -35,7 +34,7 @@ class Evaluator:
             "DROP": DROPBenchmark,
             "aime": AIMEBenchmark,
         }
-    @weave.op()
+    
     async def graph_evaluate(
         self, dataset: DatasetType, graph, params: dict, path: str, is_test: bool = False
     ) -> Tuple[float, float, float]:

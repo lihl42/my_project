@@ -70,13 +70,12 @@ Welcome to the MermaidFlow project! This project provides a method to automatica
    uv run run.py --dataset GSM8K --opt_model_name gpt-4o-mini --max_rounds 20 --validation_rounds 2
    ```
 
-   Here’s what each argument means:
+   Here's what each argument means:
    - `--dataset GSM8K`: Specifies the dataset to use (in this case, GSM8K).
    - `--opt_model_name gpt-4o-mini`: Selects the model name for optimization.
    - `--max_rounds 20`: Sets the maximum number of optimization rounds to 20.
    - `--validation_rounds 2`: Runs validation every 2 rounds.
 
-> You should have weave account
 ## Citation
 If you find this repo useful, please consider citing our paper as follows:
 ```bibtex

@@ -15,7 +15,6 @@ from workspace.MBPP.workflows.template.op_prompt import *
 from scripts.async_llm import AsyncLLM
 from scripts.logs import logger
 import asyncio
-import weave
 
 from scripts.utils.code import extract_test_cases_from_jsonl, test_case_2_test_function
 
@@ -25,7 +24,6 @@ class Operator:
         self.name = name
         self.llm = llm
 
-    @weave.op()
     def __call__(self, *args, **kwargs):
         raise NotImplementedError
 
@@ -68,7 +66,6 @@ class Custom(Operator):
     def __init__(self, llm: AsyncLLM, name: str = "Custom"):
         super().__init__(llm, name)
 
-    @weave.op()
     async def __call__(self, input, instruction):
         prompt = instruction + input
         response = await self._fill_node(GenerateOp, prompt, mode="single_fill")
@@ -78,7 +75,6 @@ class CustomCodeGenerate(Operator):
     def __init__(self, llm: AsyncLLM, name: str = "CustomCodeGenerate"):
         super().__init__(llm, name)
 
-    @weave.op()
     async def __call__(self, problem, entry_point, instruction):
         prompt = instruction + problem
         response = await self._fill_node(GenerateOp, prompt, mode="code_fill", function_name=entry_point)
@@ -96,7 +92,6 @@ class ScEnsemble(Operator):
     def __init__(self, llm: AsyncLLM, name: str = "ScEnsemble"):
         super().__init__(llm, name)
 
-    @weave.op()
     async def __call__(self, solutions: List[str], problem: str):
         answer_mapping = {}
         solution_text = ""
@@ -148,7 +143,6 @@ class Test(Operator):
         else:
             return "no error"
 
-    @weave.op()
     async def __call__(
         self, problem, solution, entry_point, test_loop: int = 3
     ):

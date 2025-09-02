@@ -22,7 +22,6 @@ from scripts.mermaid_workflow import (
     LLMAsJudge,
     LEARN_FROM_FAILED_MERMAID,
 )
-import weave
 import numpy as np
 from scripts.logs import logger
 
@@ -212,7 +211,6 @@ def get_prompt_for_generate_code(
     return prompt + WORKFLOW_CUSTOM_USE_WITH_MERMAID + graph_system
 
 
-@weave.op()
 async def get_reponse(
     parents_pair: list[dict],
     elites: list[dict],
@@ -251,7 +249,6 @@ async def get_reponse(
         return graph_candidates_response, graph_response
 
 
-    @weave.op()
     def get_graph(graph_decision, graph_candidates):
         try:
             new_graph = graph_candidates["graph_" + graph_decision["selected_graph"]]
@@ -284,7 +281,6 @@ async def get_reponse(
         else:
             break
     
-    @weave.op()
     async def generate_code(new_graph, new_prompt, new_modification):
         generate_code_prompt = get_prompt_for_generate_code(
             parents_pair=parents_pair,

@@ -6,13 +6,11 @@ from typing import List, Optional
 from tenacity import retry, stop_after_attempt, wait_fixed
 
 from scripts.formatter import BaseFormatter, FormatError, XmlFormatter, CodeFormatter, TextFormatter
-from workspace.GSM8K.workflows.template.operator_an import *
-from workspace.GSM8K.workflows.template.op_prompt import PYTHON_CODE_VERIFIER_PROMPT, SC_ENSEMBLE_PROMPT
+from workspace.MATH.workflows.template.operator_an import *
+from workspace.MATH.workflows.template.op_prompt import *
 from scripts.async_llm import AsyncLLM
 from scripts.logs import logger
 import asyncio
-
-import weave
 
 
 class Operator:
@@ -61,11 +59,10 @@ class Custom(Operator):
     def __init__(self, llm: AsyncLLM, name: str = "Custom"):
         super().__init__(llm, name)
 
-    @weave.op()
+    # @question_specific_custom
     async def __call__(self, input, instruction, role: str="Solver"):
         prompt = instruction + input
-        with weave.attributes({"custom_role": role}):
-            response = await self._fill_node(GenerateOp, prompt, mode="single_fill")
+        response = await self._fill_node(GenerateOp, prompt, mode="single_fill")
         return response
 
 def run_code(code):
@@ -135,7 +132,6 @@ class Programmer(Operator):
         return response
 
     @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
-    @weave.op()
     async def __call__(self, problem: str, analysis: str = "None"):
         """
         Call method, generate code and execute, retry up to 3 times.
@@ -170,8 +166,7 @@ class ScEnsemble(Operator):
 
     def __init__(self, llm: AsyncLLM, name: str = "ScEnsemble"):
         super().__init__(llm, name)
-
-    @weave.op()
+    
     async def __call__(self, solutions: List[str], problem: str):
         answer_mapping = {}
         solution_text = ""

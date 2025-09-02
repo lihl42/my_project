@@ -84,7 +84,6 @@ WORKFLOW_TEMPLATE = """from typing import Literal
 import workspace.{dataset}.workflows.template.operator as operator
 import workspace.{dataset}.workflows.round_{round}.prompt as prompt_custom
 from scripts.async_llm import create_llm_instance
-import weave
 
 
 DatasetType = Literal["HumanEval", "MBPP", "GSM8K", "MATH", "HotpotQA", "DROP"]
@@ -96,7 +95,6 @@ WORKFLOW_TEMPLATE_WITH_MERMAID = """from typing import Literal
 import workspace.{dataset}.workflows.template.operator as operator
 import workspace.{dataset}.workflows.round_{round}.prompt as prompt_custom
 from scripts.async_llm import create_llm_instance
-import weave
 
 
 DatasetType = Literal["HumanEval", "MBPP", "GSM8K", "MATH", "HotpotQA", "DROP"]

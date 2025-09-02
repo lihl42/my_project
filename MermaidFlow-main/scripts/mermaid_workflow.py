@@ -9,7 +9,6 @@ from scripts.evolution_prompt import (
     LLM_AS_JUDGER_SINGLE,
 )
 from scripts.formatter import XmlFormatter
-import weave
 import asyncio
 from scripts.evolution_prompt import PROMPT_FEW_SHOT
 import logging
@@ -547,7 +546,6 @@ def get_graph_candidates_prompt(
         mermaid_usage=MERMAID_CODE_GUIDANCE[type],
     )
 
-@weave.op()
 async def get_response(
     experience: str,
     score: float,
@@ -571,7 +569,6 @@ async def get_response(
         "prompt": prompt,
     }
     for _ in range(try_number):
-        @weave.op()
         async def get_graph_candidates(parent, type):
             mermaid_code_optimize_prompt = create_mermaid_optimization_prompt(
                 experience=parent["experience"],
@@ -602,7 +599,6 @@ async def get_response(
         
         graph_decision, graph_candidates = await get_graph_candidates(parent, type)
 
-        @weave.op()
         def get_graph(graph_decision, graph_candidates):
             try:
                 new_graph = graph_candidates["graph_" + graph_decision["selected_graph"]]

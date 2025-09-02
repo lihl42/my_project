@@ -2,7 +2,6 @@ from typing import Literal
 import workspace.GSM8K.workflows.template.operator as operator
 import workspace.GSM8K.workflows.round_1.prompt as prompt_custom
 from scripts.async_llm import create_llm_instance
-import weave
 
 DatasetType = Literal["HumanEval", "MBPP", "GSM8K", "MATH", "HotpotQA", "DROP"]
 
@@ -20,7 +19,6 @@ class Workflow:
         self.custom = operator.Custom(self.llm)
         self.programmer= operator.Programmer(self.llm)
 
-    @weave.op()
     async def __call__(self, problem: str):
         """
         Implementation of the workflow

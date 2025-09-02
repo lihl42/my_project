@@ -9,7 +9,6 @@ from typing import Dict, List
 from data.download_data import download
 from scripts.optimizer import Optimizer
 from scripts.async_llm import LLMsConfig
-import weave
 import logging
 import time
 
@@ -88,13 +87,13 @@ def parse_args():
     parser.add_argument(
         "--opt_model_name",
         type=str,
-        default="gpt-4o-mini",
+        default="lenovo-local",
         help="Specifies the name of the model used for optimization tasks.",
     )
     parser.add_argument(
         "--exec_model_name",
         type=str,
-        default="gpt-4o-mini",
+        default="lenovo-local",
         help="Specifies the name of the model used for execution tasks.",
     )
     return parser.parse_args()
@@ -117,12 +116,10 @@ if __name__ == "__main__":
     if exec_llm_config is None:
         raise ValueError(
             f"The execution model '{args.exec_model_name}' was not found in the 'models' section of the configuration file. "
-            "Please add it to the configuration file or specify a valid model using the --exec_model_name flag. "
+            "Please add it to the configuration file or specify a valid model using the --opt_model_name flag. "
         )
 
     download(["datasets", "initial_rounds"], force_download=args.if_force_download)
-
-    client = weave.init(f"{config.dataset}")
 
     optimizer = Optimizer(
         dataset=config.dataset,
@@ -136,7 +133,6 @@ if __name__ == "__main__":
         initial_round=args.initial_round,
         max_rounds=args.max_rounds,
         validation_rounds=args.validation_rounds,
-        client=client,
     )
 
     # Optimize workflow via setting the optimizer's mode to 'Graph'
