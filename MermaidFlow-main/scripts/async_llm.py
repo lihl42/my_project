@@ -221,7 +221,34 @@ class AsyncLLM:
             output_tokens
         )
         
-        ret = response.choices[0].message.content
+        # Robust content extraction (support gateways returning reasoning_content/text)
+        ret = getattr(response.choices[0].message, "content", None)
+
+        if not ret:
+            reasoning = getattr(response.choices[0].message, "reasoning_content", None)
+            if isinstance(reasoning, str):
+                ret = reasoning
+            elif isinstance(reasoning, list):
+                try:
+                    ret = "".join([seg.get("content", "") for seg in reasoning if isinstance(seg, dict)])
+                except Exception:
+                    ret = "".join(map(str, reasoning))
+
+        if not ret:
+            # some gateways place text directly on the choice
+            ret = getattr(response.choices[0], "text", None)
+
+        if not ret:
+            # last resort: inspect dumped dict for common shapes
+            try:
+                dumped = response.model_dump()
+                choice0 = (dumped.get("choices") or [{}])[0]
+                msg = choice0.get("message") or {}
+                ret = msg.get("content") or msg.get("reasoning_content") or choice0.get("text")
+            except Exception:
+                ret = None
+
+    
         # print(ret)
         
         # You can optionally print token usage information
